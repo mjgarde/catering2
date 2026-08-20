@@ -717,6 +717,19 @@ if ($isLoggedIn) {
 </section>
 
 <div class="container">
+    <div id="gallery-section" class="section-tight">
+        <div class="section-head">
+            <span class="section-eyebrow">Gallery</span>
+            <h2 class="section-title">Events we've set up</h2>
+        </div>
+        <div class="gallery-grid" id="galleryGrid">
+            <?php for ($i = 1; $i <= 9; $i++): ?>
+                <div class="gallery-item" data-index="<?= $i - 1 ?>">
+                    <img src="assets/img/<?= $i ?>.jpg" alt="Event sample <?= $i ?>" loading="lazy">
+                </div>
+            <?php endfor; ?>
+        </div>
+    </div>
 
     <div id="packages-section" class="section-tight">
         <div class="section-head">
@@ -772,17 +785,9 @@ if ($isLoggedIn) {
                             <?php endif; ?>
                         </div>
                         <div class="tag-body">
-                            <span class="tag-code mono">EQ-<?= str_pad($eq['id'], 3, '0', STR_PAD_LEFT) ?></span>
                             <span class="tag-category"><?= htmlspecialchars($eq['category_name']) ?></span>
                             <p class="tag-name"><?= htmlspecialchars($eq['name']) ?></p>
                             <div class="tag-price">&#8369;<?= number_format($eq['price'], 2) ?></div>
-                            <div>
-                                <div class="gauge"><div class="gauge-fill <?= $gaugeClass ?>" style="width: <?= max(0, min(100, $pct)) ?>%"></div></div>
-                                <div class="gauge-label">
-                                    <span><?= $eq['stock'] ?> in stock</span>
-                                    <span><?= $eq['quantity'] ?> total</span>
-                                </div>
-                            </div>
                             <div class="tag-footer">
                                 <button class="btn btn-outline-forest btn-add add-to-cart" <?= $outOfStock ? 'disabled' : '' ?>
                                     data-type="equipment" data-id="<?= $eq['id'] ?>" data-name="<?= htmlspecialchars($eq['name'], ENT_QUOTES) ?>">
@@ -811,20 +816,6 @@ if ($isLoggedIn) {
         </div>
     </div>
 
-    <div id="gallery-section" class="section-tight">
-        <div class="section-head">
-            <span class="section-eyebrow">Gallery</span>
-            <h2 class="section-title">Events we've set up</h2>
-            <p class="section-sub">A look at past bookings, all built from the same rental inventory above.</p>
-        </div>
-        <div class="gallery-grid" id="galleryGrid">
-            <?php for ($i = 1; $i <= 9; $i++): ?>
-                <div class="gallery-item" data-index="<?= $i - 1 ?>">
-                    <img src="assets/img/<?= $i ?>.jpg" alt="Event sample <?= $i ?>" loading="lazy">
-                </div>
-            <?php endfor; ?>
-        </div>
-    </div>
 
 </div>
 
