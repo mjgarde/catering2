@@ -1,0 +1,19 @@
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
+CREATE TABLE IF NOT EXISTS `login_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `username` varchar(100) NOT NULL,
+  `ip_address` varchar(45) NOT NULL,
+  `device_hash` varchar(64) NOT NULL,
+  `user_agent` text DEFAULT NULL,
+  `status` enum('success_admin','success_staff','failed') NOT NULL,
+  `details` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_timestamp` (`timestamp`),
+  KEY `idx_username` (`username`),
+  KEY `idx_ip` (`ip_address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
