@@ -687,7 +687,7 @@ if ($isLoggedIn) {
                         <i class="fas fa-user-circle me-1"></i><?= htmlspecialchars($customerName ?: 'Account') ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="user/dashboard.php">My bookings</a></li>
+                        <li><a class="dropdown-item" href="dashboard.php">My bookings</a></li>
                         <li><a class="dropdown-item" href="logout.php">Log out</a></li>
                     </ul>
                 </li>

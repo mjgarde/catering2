@@ -203,8 +203,6 @@ if ($action === 'checkout') {
         exit();
     }
 
-    // Also validate package contents have enough stock, since stock is only
-    // reserved (not deducted) at this stage — staff will deduct on confirmation.
     foreach ($lines as $line) {
         if ($line['type'] === 'package') {
             $pkgItemsStmt = $conn->prepare("SELECT pi.quantity, e.name, e.stock FROM package_items pi JOIN equipments e ON pi.equipment_id = e.id WHERE pi.package_id = ?");
@@ -224,8 +222,8 @@ if ($action === 'checkout') {
 
     $conn->begin_transaction();
     try {
-        $stmt = $conn->prepare("INSERT INTO customer_booking (customer_name, email, phone, address, borrow_date, return_date, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')");
-        $stmt->bind_param("ssssssd", $customerName, $email, $phone, $address, $borrowDate, $returnDate, $total);
+        $stmt = $conn->prepare("INSERT INTO customer_booking (customer_id, customer_name, email, phone, address, borrow_date, return_date, total_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending')");
+        $stmt->bind_param("issssssd", $_SESSION['customer_id'], $customerName, $email, $phone, $address, $borrowDate, $returnDate, $total);
         $stmt->execute();
         $bookingId = $stmt->insert_id;
         $stmt->close();
@@ -243,10 +241,6 @@ if ($action === 'checkout') {
                 $itemStmt->close();
             }
         }
-
-        // Stock is intentionally NOT deducted here. It is reserved only once
-        // staff confirms the booking in the staff dashboard, which deducts
-        // the equipment/package stock at that point.
 
         $conn->commit();
         $_SESSION['cart'] = [];
