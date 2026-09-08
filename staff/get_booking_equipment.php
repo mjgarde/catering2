@@ -13,7 +13,7 @@ if ($booking_id <= 0) {
 
 $equipment = [];
 
-$sql_equipment = "SELECT bi.equipment_id, bi.quantity, e.name as equipment_name
+$sql_equipment = "SELECT bi.equipment_id, bi.quantity, e.name as equipment_name, e.price
                   FROM booking_items bi
                   JOIN equipments e ON bi.equipment_id = e.id
                   WHERE bi.booking_id = ? AND bi.equipment_id IS NOT NULL";
@@ -27,14 +27,15 @@ while ($row = $result->fetch_assoc()) {
     $equipment[] = [
         'equipment_id' => $row['equipment_id'],
         'equipment_name' => $row['equipment_name'],
-        'quantity' => $row['quantity']
+        'quantity' => $row['quantity'],
+        'price' => $row['price']
     ];
 }
 $stmt->close();
 
 $sql_packages = "SELECT bi.package_id, bi.quantity as package_qty, 
                         pi.equipment_id, pi.quantity as item_qty, 
-                        e.name as equipment_name
+                        e.name as equipment_name, e.price
                  FROM booking_items bi
                  JOIN package_items pi ON bi.package_id = pi.package_id
                  JOIN equipments e ON pi.equipment_id = e.id
@@ -56,12 +57,14 @@ while ($row = $result->fetch_assoc()) {
             break;
         }
     }
+    unset($eq);
     
     if (!$found) {
         $equipment[] = [
             'equipment_id' => $row['equipment_id'],
             'equipment_name' => $row['equipment_name'],
-            'quantity' => $total_qty
+            'quantity' => $total_qty,
+            'price' => $row['price']
         ];
     }
 }

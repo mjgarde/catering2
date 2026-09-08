@@ -82,6 +82,25 @@ if ($bookings_result) {
         padding: 3px 8px;
         margin-left: 5px;
     }
+    #returnModal .modal-dialog {
+        max-width: 512px;
+    }
+    .damaged-item select.form-select-sm {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .damaged-item .row.g-2 {
+        align-items: flex-start;
+    }
+    .damaged-item .row.g-2 > div {
+        min-width: 0;
+    }
+    .damaged-item select.form-select-sm {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
 </style>
 </head>
 <body>
@@ -212,36 +231,24 @@ if ($bookings_result) {
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Any Damages?</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="has_damage" id="no_damage" value="0" checked onchange="toggleDamageFields()">
-                            <label class="form-check-label" for="no_damage">No Damage</label>
+                        <label class="form-label fw-bold">Damaged Equipment</label>
+                        <div id="damagedEquipmentList" class="border rounded p-3 bg-light">
+                            <p class="text-muted mb-2"><small>Loading equipment from this booking...</small></p>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="has_damage" id="has_damage" value="1" onchange="toggleDamageFields()">
-                            <label class="form-check-label" for="has_damage">Yes, Has Damage</label>
-                        </div>
+                        <button type="button" class="btn btn-sm btn-danger mt-2" onclick="addDamagedEquipment()">
+                            <i class="fas fa-plus"></i> Add Damaged Item
+                        </button>
                     </div>
 
-                    <div id="damageFields" style="display: none;">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Select Damaged Equipment</label>
-                            <div id="damagedEquipmentList" class="border rounded p-3 bg-light">
-                                <p class="text-muted mb-2"><small>Loading equipment from this booking...</small></p>
-                            </div>
-                            <button type="button" class="btn btn-sm btn-danger mt-2" onclick="addDamagedEquipment()">
-                                <i class="fas fa-plus"></i> Add Damaged Item
-                            </button>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="damage_fee" class="form-label">Total Damage Fee (₱)</label>
-                            <input type="number" class="form-control" name="damage_fee" id="damage_fee" min="0" step="0.01" value="0" onchange="updateTotalPayment()">
-                        </div>
-                        <div class="mb-3">
-                            <label for="damage_notes" class="form-label">Overall Damage Description</label>
-                            <textarea class="form-control" name="damage_notes" id="damage_notes" rows="3" placeholder="Describe the overall damage situation..."></textarea>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Total Damage Fee (₱)</label>
+                        <input type="text" class="form-control" id="damage_fee_display" value="₱0.00" readonly>
+                        <input type="hidden" name="damage_fee" id="damage_fee" value="0">
+                        <small class="text-muted">Auto-calculated from the price of each damaged item.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="damage_notes" class="form-label">Overall Damage Description</label>
+                        <textarea class="form-control" name="damage_notes" id="damage_notes" rows="3" placeholder="Describe the overall damage situation..."></textarea>
                     </div>
 
                     <div class="alert alert-success" id="totalPaymentAlert" style="display: none;">
@@ -312,32 +319,18 @@ function confirmBooking(bookingId, btn) {
     });
 }
 
-function toggleDamageFields() {
-    const hasDamage = document.getElementById('has_damage').checked;
-    document.getElementById('damageFields').style.display = hasDamage ? 'block' : 'none';
-    if (!hasDamage) {
-        document.getElementById('damage_fee').value = '0';
-        document.getElementById('damage_notes').value = '';
-        document.getElementById('damagedEquipmentList').innerHTML = '<p class="text-muted mb-2"><small>Loading equipment from this booking...</small></p>';
-        damagedEquipmentCounter = 0;
-    } else {
-        loadBookingEquipment();
-    }
-    updateTotalPayment();
-}
-
 function loadBookingEquipment() {
     if (!currentBookingData) return;
-    
+
     const bookingId = currentBookingData.id;
-    
+
     fetch(`get_booking_equipment.php?booking_id=${bookingId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 bookingEquipments = data.equipment;
                 document.getElementById('damagedEquipmentList').innerHTML = '';
-                addDamagedEquipment();
+                damagedEquipmentCounter = 0;
             } else {
                 document.getElementById('damagedEquipmentList').innerHTML = '<p class="text-danger mb-0">No equipment found in this booking</p>';
             }
@@ -353,56 +346,77 @@ function addDamagedEquipment() {
         alert('No equipment available in this booking');
         return;
     }
-    
+
     damagedEquipmentCounter++;
     const listDiv = document.getElementById('damagedEquipmentList');
     const itemDiv = document.createElement('div');
     itemDiv.className = 'damaged-item';
     itemDiv.id = `damaged-${damagedEquipmentCounter}`;
-    
+
     let optionsHTML = '<option value="">-- Select Equipment --</option>';
     bookingEquipments.forEach(eq => {
-        optionsHTML += `<option value="${eq.equipment_id}" data-max="${eq.quantity}">${eq.equipment_name} (Booked: ${eq.quantity})</option>`;
+        optionsHTML += `<option value="${eq.equipment_id}" data-max="${eq.quantity}" data-price="${eq.price}">${eq.equipment_name} (Booked: ${eq.quantity})</option>`;
     });
-    
+
     itemDiv.innerHTML = `
         <div class="row g-2">
-            <div class="col-md-6">
-                <label class="form-label small">Equipment</label>
+            <div class="col-6">
+                <label class="form-label small mb-1">Equipment</label>
                 <select class="form-select form-select-sm" name="damaged_equipment_id[]" onchange="updateMaxQuantity(${damagedEquipmentCounter})" required>
                     ${optionsHTML}
                 </select>
             </div>
-            <div class="col-md-4">
-                <label class="form-label small">Damaged Quantity</label>
-                <input type="number" class="form-control form-control-sm damaged-qty" id="damaged-qty-${damagedEquipmentCounter}" name="damaged_quantity[]" value="1" min="1" required>
+            <div class="col-4">
+                <label class="form-label small mb-1">Damaged Quantity</label>
+                <input type="number" class="form-control form-control-sm damaged-qty" id="damaged-qty-${damagedEquipmentCounter}" name="damaged_quantity[]" value="1" min="1" oninput="calculateDamageFee()" required>
                 <small class="text-muted" id="max-qty-${damagedEquipmentCounter}"></small>
             </div>
-            <div class="col-md-2 d-flex align-items-end">
+            <div class="col-2">
+                <label class="form-label small mb-1 d-block">&nbsp;</label>
                 <button type="button" class="btn btn-danger btn-sm w-100" onclick="removeDamagedEquipment(${damagedEquipmentCounter})">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
         </div>
     `;
-    
+
     listDiv.appendChild(itemDiv);
+    calculateDamageFee();
 }
 
 function updateMaxQuantity(counter) {
     const selectElement = document.querySelector(`#damaged-${counter} select`);
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     const maxQty = selectedOption.dataset.max || 1;
-    
+
     const qtyInput = document.getElementById(`damaged-qty-${counter}`);
     qtyInput.max = maxQty;
     qtyInput.value = Math.min(qtyInput.value, maxQty);
-    
+
     document.getElementById(`max-qty-${counter}`).textContent = `Max: ${maxQty}`;
+    calculateDamageFee();
+}
+
+function calculateDamageFee() {
+    let total = 0;
+
+    document.querySelectorAll('.damaged-item').forEach(item => {
+        const select = item.querySelector('select');
+        const qtyInput = item.querySelector('.damaged-qty');
+        const selectedOption = select.options[select.selectedIndex];
+        const price = parseFloat(selectedOption?.dataset.price || 0);
+        const qty = parseFloat(qtyInput.value || 0);
+        total += price * qty;
+    });
+
+    document.getElementById('damage_fee').value = total.toFixed(2);
+    document.getElementById('damage_fee_display').value = '₱' + total.toFixed(2);
+    updateTotalPayment();
 }
 
 function removeDamagedEquipment(id) {
     document.getElementById(`damaged-${id}`)?.remove();
+    calculateDamageFee();
 }
 
 function updateTotalPayment() {
@@ -414,15 +428,15 @@ function updateTotalPayment() {
     const total = rental + fine + damage;
     
     document.getElementById('totalPayment').textContent = '₱' + total.toFixed(2);
+    document.getElementById('totalPaymentAlert').style.display = total > rental ? 'block' : (fine > 0 ? 'block' : (damage > 0 ? 'block' : 'none'));
 }
 
 function openReturnModal(bookingId, isOverdue) {
     document.getElementById('return_booking_id').value = bookingId;
-    
-    document.getElementById('no_damage').checked = true;
+
     document.getElementById('damage_fee').value = '0';
+    document.getElementById('damage_fee_display').value = '₱0.00';
     document.getElementById('damage_notes').value = '';
-    document.getElementById('damageFields').style.display = 'none';
     document.getElementById('damagedEquipmentList').innerHTML = '<p class="text-muted mb-2"><small>Loading equipment from this booking...</small></p>';
     damagedEquipmentCounter = 0;
     
@@ -452,7 +466,9 @@ function openReturnModal(bookingId, isOverdue) {
         .then(data => {
             if (data.success) {
                 currentBookingData = data.booking;
-                
+
+                loadBookingEquipment();
+
                 if (data.booking.fine_amount > 0) {
                     document.getElementById('fineAlert').style.display = 'block';
                     document.getElementById('rentalAmount').textContent = '₱' + parseFloat(data.booking.total_amount).toFixed(2);
