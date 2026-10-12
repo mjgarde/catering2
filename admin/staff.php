@@ -130,8 +130,8 @@ $staff_list = array_map(function($s) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Staff Management</title>
-    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/font/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
@@ -318,8 +318,8 @@ $staff_list = array_map(function($s) {
     </div>
 </div>
 
-<script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="../assets/font/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script> 
 <script>
 function openEdit(id, firstname, lastname, age, contact, address, username) {
     document.getElementById('edit_id').value      = id;

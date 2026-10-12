@@ -128,8 +128,8 @@ while ($row = $cat_result->fetch_assoc()) $category_data[] = $row;
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard - Catering System</title>
-<link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="../assets/font/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
     .stat-card { border-left:4px solid; transition:all .3s ease; height:100%; }
@@ -418,8 +418,8 @@ while ($row = $cat_result->fetch_assoc()) $category_data[] = $row;
     </main>
 </div>
 
-<script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="../assets/font/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script> 
 <script>
 const revenueCtx = document.getElementById('revenueChart').getContext('2d');
 new Chart(revenueCtx, {

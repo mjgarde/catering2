@@ -114,8 +114,8 @@ unset($r);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reports</title>
-<link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="../assets/font/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
     .activity-date { font-weight:bold; color:#0d6efd; }
     .movement-card { border-left:3px solid; margin-bottom:10px; }
@@ -386,7 +386,7 @@ unset($r);
     </main>
 </div>
 
-<script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="../assets/font/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script> 
 </body>
 </html>
