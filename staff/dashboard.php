@@ -120,67 +120,9 @@ else $greeting = "Good Evening";
                 </div>
             </div>
 
-            <div class="row mb-4">
-                <div class="col-md-3 mb-3">
-                    <div class="card stat-card border-0 shadow-sm bg-primary bg-gradient text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1 opacity-75">Today's Bookings</h6>
-                                    <h2 class="mb-0"><?= $today_stats['today_bookings'] ?></h2>
-                                </div>
-                                <i class="fas fa-calendar-plus stat-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card stat-card border-0 shadow-sm bg-success bg-gradient text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1 opacity-75">Today's Revenue</h6>
-                                    <h2 class="mb-0">₱<?= number_format($today_stats['today_revenue'], 0) ?></h2>
-                                </div>
-                                <i class="fas fa-peso-sign stat-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card stat-card border-0 shadow-sm bg-info bg-gradient text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1 opacity-75">Active Bookings</h6>
-                                    <h2 class="mb-0"><?= $active_count ?></h2>
-                                </div>
-                                <i class="fas fa-clipboard-list stat-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card stat-card border-0 shadow-sm bg-warning bg-gradient text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1 opacity-75">Overdue Items</h6>
-                                    <h2 class="mb-0">
-                                        <?= $overdue_count ?>
-                                        <?php if ($overdue_count > 0): ?>
-                                        <i class="fas fa-exclamation-triangle ms-2 badge-pulse"></i>
-                                        <?php endif; ?>
-                                    </h2>
-                                </div>
-                                <i class="fas fa-exclamation-circle stat-icon"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          
 
-            <div class="card mb-4 border-0 shadow-sm">
+            <!-- <div class="card mb-4 border-0 shadow-sm">
                 <div class="card-header bg-white border-0">
                     <h5 class="mb-0"><i class="fas fa-bolt text-warning"></i> Quick Actions</h5>
                 </div>
@@ -212,7 +154,7 @@ else $greeting = "Good Evening";
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="row">
                 <div class="col-lg-8 mb-4">

@@ -336,6 +336,14 @@ a { color: var(--forest-dark); }
     color: var(--ink-soft);
     max-width: 560px;
 }
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.category-filters .btn {
+    border-radius: 999px;
+}
 
 .tag-card {
     background: var(--white);
@@ -352,7 +360,7 @@ a { color: var(--forest-dark); }
     transform: translateY(-3px);
 }
 .tag-photo {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
     background: var(--paper-dim);
     display: flex;
     align-items: center;
@@ -772,8 +780,20 @@ a { color: var(--forest-dark); }
             <span class="section-eyebrow">Inventory</span>
             <h2 class="section-title">Catering equipment</h2>
             <p class="section-sub">Everything from tableware to furniture, rented piece by piece.</p>
+            <div class="category-filters mt-3">
+                <button type="button" class="btn btn-sm btn-forest category-btn" data-category="all">All</button>
+                <?php
+                $seenCats = [];
+                foreach ($equipment as $eq) {
+                    if (!in_array($eq['category_name'], $seenCats)) {
+                        $seenCats[] = $eq['category_name'];
+                        echo '<button type="button" class="btn btn-sm btn-outline-forest category-btn" data-category="' . htmlspecialchars($eq['category_name'], ENT_QUOTES) . '">' . htmlspecialchars($eq['category_name']) . '</button>';
+                    }
+                }
+                ?>
+            </div>
         </div>
-        <div class="row g-4">
+        <div class="row g-4" id="equipmentGrid">
             <?php if (empty($equipment)): ?>
                 <div class="col-12 text-center text-muted">No equipment listed yet.</div>
             <?php else: foreach ($equipment as $eq):
@@ -781,7 +801,7 @@ a { color: var(--forest-dark); }
                 $gaugeClass = $pct <= 30 ? 'low' : ($pct <= 60 ? 'mid' : '');
                 $outOfStock = $eq['stock'] <= 0;
             ?>
-                <div class="col-6 col-md-4 col-lg-3">
+                <div class="col-6 col-md-4 col-lg-3 equipment-item" data-category="<?= htmlspecialchars($eq['category_name'], ENT_QUOTES) ?>">
                     <div class="tag-card">
                         <div class="tag-photo">
                             <?php if (!empty($eq['photo'])): ?>
@@ -1067,6 +1087,43 @@ document.addEventListener('DOMContentLoaded', function() {
     new bootstrap.Modal(registerModal).show();
     <?php endif; ?>
 
+    function toLocalInputValue(d) {
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    const borrowInput = document.querySelector('input[name="borrow_date"]');
+    const returnInput = document.querySelector('input[name="return_date"]');
+
+    document.getElementById('checkoutModal').addEventListener('show.bs.modal', function() {
+        const nowStr = toLocalInputValue(new Date());
+        borrowInput.min = nowStr;
+        returnInput.min = nowStr;
+    });
+
+    borrowInput.addEventListener('change', function() {
+        returnInput.min = this.value || toLocalInputValue(new Date());
+        if (returnInput.value && returnInput.value < returnInput.min) {
+            returnInput.value = '';
+        }
+    });
+
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.category-btn').forEach(b => {
+                b.classList.remove('btn-forest');
+                b.classList.add('btn-outline-forest');
+            });
+            this.classList.remove('btn-outline-forest');
+            this.classList.add('btn-forest');
+
+            const cat = this.dataset.category;
+            document.querySelectorAll('.equipment-item').forEach(item => {
+                item.style.display = (cat === 'all' || item.dataset.category === cat) ? '' : 'none';
+            });
+        });
+    });
+
     document.querySelectorAll('.add-to-cart').forEach(btn => {
         btn.addEventListener('click', function() {
             if (!isLoggedIn) {
@@ -1229,6 +1286,21 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         const errorBox = document.getElementById('checkoutError');
         errorBox.style.display = 'none';
+
+        const now = new Date();
+        const borrowVal = new Date(borrowInput.value);
+        const returnVal = new Date(returnInput.value);
+        if (borrowVal < now) {
+            errorBox.textContent = 'Borrow date cannot be in the past.';
+            errorBox.style.display = 'block';
+            return;
+        }
+        if (returnVal <= borrowVal) {
+            errorBox.textContent = 'Return date must be after the borrow date.';
+            errorBox.style.display = 'block';
+            return;
+        }
+
         const formData = new URLSearchParams(new FormData(this));
         formData.append('action', 'checkout');
 
