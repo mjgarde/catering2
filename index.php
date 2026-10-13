@@ -854,13 +854,13 @@ a { color: var(--forest-dark); }
 
 <button class="cart-fab" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
     <i class="fas fa-bag-shopping"></i>
-    Order
+    Add to Booking
     <span class="badge rounded-pill" id="cartCountBadge"><?= $cartCount ?></span>
 </button>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas">
     <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title">Your order</h5>
+        <h5 class="offcanvas-title">Your booking</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body d-flex flex-column">

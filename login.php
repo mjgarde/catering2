@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="card shadow-lg border-0">
                 <div class="card-body p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
+                        <img src="assets/img/logo.png" alt="Logo" class="mb-3" style="width:auto;max-width:100%;height:80px;object-fit:contain;">
                         <h1 class="h4 fw-bold">Sign In</h1>
                     </div>
 
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
 <script>
 const blocked = ["'", '"', ';', '--', '<', '>', '\\', '=', '`', '|', '&', '%'];
 document.querySelectorAll('input[type=text], input[type=password]').forEach(input => {

@@ -33,6 +33,7 @@ $hasTodayBooking = $todayBookingCount > 0;
          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="dashboard.php"><i class="fa-solid fa-home me-1"></i> Home</a></li>
             <li class="nav-item"><a class="nav-link" href="bookings.php"><i class="fa-solid fa-calendar-check me-1"></i> Bookings</a></li>
+            <li class="nav-item"><a class="nav-link" href="inventory.php"><i class="fa-solid fa-box me-1"></i> Inventory</a></li>
             <li class="nav-item">
                <a class="nav-link position-relative" href="calendar.php">
                <i class="fa-solid fa-calendar me-1"></i> Calendar
@@ -78,7 +79,7 @@ $hasTodayBooking = $todayBookingCount > 0;
       </li>
       <li class="nav-item mb-2">
          <a href="inventory.php" class="nav-link text-dark">
-         <i class="fa-solid fa-box me-2"></i> inventory
+         <i class="fa-solid fa-box me-2"></i> Inventory
          </a>
       </li>
       <li class="nav-item mb-2">
@@ -90,6 +91,7 @@ $hasTodayBooking = $todayBookingCount > 0;
          </span>
          <?php endif; ?>
          </a>
+      </li>
       <li class="nav-item mt-auto">
          <a href="../logout.php" class="nav-link text-danger">
          <i class="fa-solid fa-sign-out-alt me-2"></i>
